@@ -1,0 +1,136 @@
+<style>
+/* Плавающий кружок */
+#chat-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #007bff;
+    color: white;
+    text-align: center;
+    line-height: 60px;
+    font-size: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 9999;
+}
+
+/* Окно чата */
+#chat-window {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 320px;
+    max-height: 400px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 9998;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+/* Сообщения */
+#chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* Поле ввода */
+#chat-input {
+    display: flex;
+    padding: 5px;
+    background: #f0f0f0;
+}
+
+#chat-input input {
+    flex: 1;
+    padding: 6px 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+#chat-input button {
+    margin-left: 5px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#chat-messages div {
+    margin-bottom: 8px;
+}
+</style>
+
+<!-- Плавающая кнопка -->
+<div id="chat-button">💬</div>
+
+<!-- Окно чата -->
+<div id="chat-window" style="display: flex; flex-direction: column;">
+    <div id="chat-messages"></div>
+    <div id="chat-input">
+        <input type="text" id="chat-text" placeholder="Напиши сообщение..." />
+        <button id="send-btn">Отправить</button>
+    </div>
+</div>
+
+<script>
+const chatButton = document.getElementById('chat-button');
+const chatWindow = document.getElementById('chat-window');
+const chatMessages = document.getElementById('chat-messages');
+const chatInput = document.getElementById('chat-text');
+const sendBtn = document.getElementById('send-btn');
+
+// Показать/скрыть чат
+chatButton.addEventListener('click', () => {
+    chatWindow.style.display =
+        chatWindow.style.display === 'flex' ? 'none' : 'flex';
+});
+
+// Функция отправки сообщений
+async function sendMessage() {
+    let message = chatInput.value.trim();
+    if (!message) return;
+
+    chatMessages.innerHTML += `<div><b>Ты:</b> ${message}</div>`;
+    chatInput.value = '';
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    try {
+        // ТВОЙ URL сервера Render
+        let response = await fetch(
+            "https://campus-bot-fal2.onrender.com/ask?question=" +
+            encodeURIComponent(message)
+        );
+
+        let data = await response.text();
+
+        chatMessages.innerHTML += `<div><b>Бот:</b> ${data}</div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    } catch (err) {
+        chatMessages.innerHTML += `<div><b>Бот:</b> Ошибка сервера</div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+// Кнопка отправки
+sendBtn.addEventListener('click', sendMessage);
+
+// Enter для отправки
+chatInput.addEventListener('keydown', function(e){
+    if (e.key === "Enter") sendMessage();
+});
+</script>
