@@ -108,22 +108,21 @@ async function sendMessage() {
     chatInput.value = '';
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    try {
-        // ТВОЙ URL сервера Render
-        let response = await fetch(
-            ""https://campus-bot-tzxr.onrender.com/ask?question=" + encodeURIComponent(message)
-        );
+   try {
+    let response = await fetch(
+        "https://campus-bot-tzxr.onrender.com/ask?question=" + encodeURIComponent(message)
+    );
 
-        let data = await response.text();
+    let data = await response.text();
 
-        chatMessages.innerHTML += `<div><b>Бот:</b> ${data}</div>`;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+    chatMessages.innerHTML += `<div><b>Бот:</b> ${data}</div>`;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    } catch (err) {
-        chatMessages.innerHTML += `<div><b>Бот:</b> Ошибка сервера</div>`;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+} catch (err) {
+    chatMessages.innerHTML += `<div><b>Бот:</b> Ошибка сервера</div>`;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
 
 // Кнопка отправки
 sendBtn.addEventListener('click', sendMessage);
