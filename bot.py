@@ -14,18 +14,25 @@ def find_building(question):
             return info
     return None
 
-print("Привет! Я чат-бот навигации по кампусу Есенов Университета.")
+print("Бот: Привет! Я чат-бот навигации по кампусу Есенов Университета.")
 print("Напиши 'выход' чтобы закрыть бот.")
 
 while True:
-    q = input("Студент: ")
-    if q.lower() in ["выход", "exit", "quit"]:
+    q = input("Студент: ").strip().lower()
+    
+    if q in ["выход", "exit", "quit"]:
         print("Бот: До встречи!")
         break
+
+    # Если пользователь пишет привет
+    if q in ["привет", "здравствуй", "hello", "hi"]:
+        print("Бот: Привет! Я чат-бот навигации по кампусу Есенов Университета.")
+        continue
 
     building = find_building(q)
     if building:
         print(f"Бот: {building['name']}\nОписание: {building['description']}\nУслуги: {', '.join(building['services'])}\nРасположение: {building['location']}")
     else:
         print("Бот: К сожалению, в базе данных нет информации по вашему запросу.")
+
 
